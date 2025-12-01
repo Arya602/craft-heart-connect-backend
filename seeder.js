@@ -10,8 +10,9 @@ const Wishlist = require('./models/Wishlist');
 const connectDB = require('./config/db');
 
 dotenv.config();
+console.log('URI:', process.env.MONGODB_URI);
 
-connectDB();
+
 
 const importData = async () => {
     try {
@@ -23,15 +24,17 @@ const importData = async () => {
         const createdUsers = await User.insertMany(users);
 
         const adminUser = createdUsers[0]._id;
-        const seller1 = createdUsers[2]._id;
-        const seller2 = createdUsers[3]._id;
-        const seller3 = createdUsers[4]._id;
+        const seller1 = createdUsers[2]._id; // Jane Smith (Pottery)
+        const seller2 = createdUsers[3]._id; // Ravi Kumar (Textiles)
+        const seller3 = createdUsers[4]._id; // Priya Sharma (Jewelry)
+        const seller4 = createdUsers[5]._id; // Amit Patel (Paintings)
 
         const sampleProducts = products.map((product, index) => {
             let user = adminUser;
-            if (index < 3) user = seller1;
-            else if (index < 6) user = seller2;
-            else if (index < 9) user = seller3;
+            if (index < 4) user = seller1;       // 0-3
+            else if (index < 8) user = seller2;  // 4-7
+            else if (index < 12) user = seller3; // 8-11
+            else if (index < 16) user = seller4; // 12-15
 
             return { ...product, user };
         });

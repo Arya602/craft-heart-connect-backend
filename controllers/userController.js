@@ -83,9 +83,24 @@ const markNotificationRead = async (req, res) => {
     }
 };
 
+// @desc    Get all artisans (sellers)
+// @route   GET /api/users/artisans
+// @access  Public
+const getArtisans = async (req, res) => {
+    try {
+        const artisans = await User.find({ roles: 'seller' })
+            .select('-password -refreshToken')
+            .sort({ createdAt: -1 });
+        res.json(artisans);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
 module.exports = {
     followUser,
     unfollowUser,
     getNotifications,
     markNotificationRead,
+    getArtisans,
 };

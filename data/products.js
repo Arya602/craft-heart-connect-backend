@@ -1,23 +1,20 @@
 const products = [
+    // Pottery (Jane Smith)
     {
         name: 'Handcrafted Clay Pot',
-        image: 'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg',
-        description:
-            'Beautiful handmade clay pot perfect for indoor plants. Crafted with care using traditional techniques.',
+        image: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&auto=format&fit=crop&q=60',
+        description: 'Beautiful handmade clay pot perfect for indoor plants. Crafted with care using traditional techniques.',
         brand: 'Earthly Crafts',
         category: 'Pottery',
         price: 1200,
         countInStock: 10,
         rating: 4.5,
         numReviews: 12,
-        location: {
-            type: 'Point',
-            coordinates: [77.209, 28.6139], // New Delhi
-        },
+        location: { type: 'Point', coordinates: [77.209, 28.6139] },
     },
     {
         name: 'Ceramic Vase',
-        image: 'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg',
+        image: 'https://images.unsplash.com/photo-1578749556935-ef887c545adb?w=800&auto=format&fit=crop&q=60',
         description: 'Elegant ceramic vase with intricate patterns.',
         brand: 'Earthly Crafts',
         category: 'Pottery',
@@ -25,14 +22,11 @@ const products = [
         countInStock: 5,
         rating: 4.8,
         numReviews: 8,
-        location: {
-            type: 'Point',
-            coordinates: [77.209, 28.6139],
-        },
+        location: { type: 'Point', coordinates: [77.209, 28.6139] },
     },
     {
         name: 'Terracotta Mug Set',
-        image: 'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg',
+        image: 'https://images.unsplash.com/photo-1517260739337-6799d239ce83?w=800&auto=format&fit=crop&q=60',
         description: 'Set of 4 terracotta mugs, perfect for tea lovers.',
         brand: 'Earthly Crafts',
         category: 'Pottery',
@@ -40,14 +34,25 @@ const products = [
         countInStock: 20,
         rating: 4.2,
         numReviews: 15,
-        location: {
-            type: 'Point',
-            coordinates: [77.209, 28.6139],
-        },
+        location: { type: 'Point', coordinates: [77.209, 28.6139] },
     },
     {
+        name: 'Glazed Serving Bowl',
+        image: 'https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?w=800&auto=format&fit=crop&q=60',
+        description: 'Large glazed serving bowl, food safe and microwave safe.',
+        brand: 'Earthly Crafts',
+        category: 'Pottery',
+        price: 1500,
+        countInStock: 8,
+        rating: 4.6,
+        numReviews: 5,
+        location: { type: 'Point', coordinates: [77.209, 28.6139] },
+    },
+
+    // Textiles (Ravi Kumar)
+    {
         name: 'Handwoven Silk Scarf',
-        image: 'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg',
+        image: 'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=800&auto=format&fit=crop&q=60',
         description: 'Luxurious silk scarf woven by skilled artisans.',
         brand: 'Silk Route',
         category: 'Textiles',
@@ -55,14 +60,11 @@ const products = [
         countInStock: 8,
         rating: 4.9,
         numReviews: 20,
-        location: {
-            type: 'Point',
-            coordinates: [75.8577, 22.7196], // Indore
-        },
+        location: { type: 'Point', coordinates: [75.8577, 22.7196] },
     },
     {
         name: 'Cotton Block Print Bedsheet',
-        image: 'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg',
+        image: 'https://images.unsplash.com/photo-1522771753035-4a50354b6063?w=800&auto=format&fit=crop&q=60',
         description: 'Traditional block print bedsheet, 100% cotton.',
         brand: 'Jaipur Prints',
         category: 'Textiles',
@@ -70,14 +72,11 @@ const products = [
         countInStock: 15,
         rating: 4.6,
         numReviews: 25,
-        location: {
-            type: 'Point',
-            coordinates: [75.7873, 26.9124], // Jaipur
-        },
+        location: { type: 'Point', coordinates: [75.7873, 26.9124] },
     },
     {
         name: 'Embroidered Cushion Covers',
-        image: 'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg',
+        image: 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e6?w=800&auto=format&fit=crop&q=60',
         description: 'Set of 2 embroidered cushion covers with mirror work.',
         brand: 'Kutch Crafts',
         category: 'Textiles',
@@ -85,14 +84,25 @@ const products = [
         countInStock: 12,
         rating: 4.7,
         numReviews: 10,
-        location: {
-            type: 'Point',
-            coordinates: [69.6693, 23.242], // Bhuj
-        },
+        location: { type: 'Point', coordinates: [69.6693, 23.242] },
     },
     {
+        name: 'Woven Table Runner',
+        image: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&auto=format&fit=crop&q=60',
+        description: 'Handwoven table runner with ethnic patterns.',
+        brand: 'Silk Route',
+        category: 'Textiles',
+        price: 1100,
+        countInStock: 10,
+        rating: 4.4,
+        numReviews: 6,
+        location: { type: 'Point', coordinates: [75.8577, 22.7196] },
+    },
+
+    // Jewelry (Priya Sharma)
+    {
         name: 'Silver Oxidized Necklace',
-        image: 'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg',
+        image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&auto=format&fit=crop&q=60',
         description: 'Traditional silver oxidized necklace with tribal design.',
         brand: 'Tribal Ornaments',
         category: 'Jewelry',
@@ -100,14 +110,11 @@ const products = [
         countInStock: 7,
         rating: 4.4,
         numReviews: 18,
-        location: {
-            type: 'Point',
-            coordinates: [73.8567, 18.5204], // Pune
-        },
+        location: { type: 'Point', coordinates: [73.8567, 18.5204] },
     },
     {
         name: 'Beaded Bracelet',
-        image: 'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg',
+        image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&auto=format&fit=crop&q=60',
         description: 'Colorful beaded bracelet, handmade with love.',
         brand: 'Boho Chic',
         category: 'Jewelry',
@@ -115,14 +122,11 @@ const products = [
         countInStock: 30,
         rating: 4.1,
         numReviews: 5,
-        location: {
-            type: 'Point',
-            coordinates: [72.8777, 19.076], // Mumbai
-        },
+        location: { type: 'Point', coordinates: [72.8777, 19.076] },
     },
     {
         name: 'Terracotta Earrings',
-        image: 'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg',
+        image: 'https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?w=800&auto=format&fit=crop&q=60',
         description: 'Hand-painted terracotta earrings, lightweight and trendy.',
         brand: 'Earthly Crafts',
         category: 'Jewelry',
@@ -130,14 +134,25 @@ const products = [
         countInStock: 25,
         rating: 4.3,
         numReviews: 14,
-        location: {
-            type: 'Point',
-            coordinates: [88.3639, 22.5726], // Kolkata
-        },
+        location: { type: 'Point', coordinates: [88.3639, 22.5726] },
     },
     {
+        name: 'Gemstone Ring',
+        image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&auto=format&fit=crop&q=60',
+        description: 'Handcrafted ring with semi-precious gemstone.',
+        brand: 'Boho Chic',
+        category: 'Jewelry',
+        price: 2200,
+        countInStock: 6,
+        rating: 4.8,
+        numReviews: 9,
+        location: { type: 'Point', coordinates: [73.8567, 18.5204] },
+    },
+
+    // Paintings (Amit Patel)
+    {
         name: 'Madhubani Painting',
-        image: 'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg',
+        image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&auto=format&fit=crop&q=60',
         description: 'Authentic Madhubani painting on handmade paper.',
         brand: 'Mithila Art',
         category: 'Paintings',
@@ -145,14 +160,11 @@ const products = [
         countInStock: 3,
         rating: 5.0,
         numReviews: 6,
-        location: {
-            type: 'Point',
-            coordinates: [85.324, 25.0961], // Patna
-        },
+        location: { type: 'Point', coordinates: [85.324, 25.0961] },
     },
     {
         name: 'Warli Art Wall Hanging',
-        image: 'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg',
+        image: 'https://images.unsplash.com/photo-1580136608260-4eb11f4b64fe?w=800&auto=format&fit=crop&q=60',
         description: 'Traditional Warli art painted on canvas.',
         brand: 'Tribal Strokes',
         category: 'Paintings',
@@ -160,14 +172,11 @@ const products = [
         countInStock: 6,
         rating: 4.6,
         numReviews: 9,
-        location: {
-            type: 'Point',
-            coordinates: [72.9612, 20.3893], // Vapi
-        },
+        location: { type: 'Point', coordinates: [72.9612, 20.3893] },
     },
     {
         name: 'Pattachitra Scroll',
-        image: 'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg',
+        image: 'https://images.unsplash.com/photo-1578301978018-3005759f48f7?w=800&auto=format&fit=crop&q=60',
         description: 'Intricate Pattachitra scroll painting depicting mythology.',
         brand: 'Odisha Crafts',
         category: 'Paintings',
@@ -175,10 +184,19 @@ const products = [
         countInStock: 2,
         rating: 4.9,
         numReviews: 4,
-        location: {
-            type: 'Point',
-            coordinates: [85.8245, 20.2961], // Bhubaneswar
-        },
+        location: { type: 'Point', coordinates: [85.8245, 20.2961] },
+    },
+    {
+        name: 'Abstract Canvas Art',
+        image: 'https://images.unsplash.com/photo-1549887534-1541e9326642?w=800&auto=format&fit=crop&q=60',
+        description: 'Modern abstract painting suitable for contemporary homes.',
+        brand: 'Modern Strokes',
+        category: 'Paintings',
+        price: 4500,
+        countInStock: 4,
+        rating: 4.5,
+        numReviews: 7,
+        location: { type: 'Point', coordinates: [77.209, 28.6139] },
     },
 ];
 
