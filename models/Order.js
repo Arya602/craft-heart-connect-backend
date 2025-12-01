@@ -15,7 +15,7 @@ const orderSchema = mongoose.Schema(
                 price: { type: Number, required: true },
                 product: {
                     type: mongoose.Schema.Types.ObjectId,
-                    required: true,
+                    required: false, // Made optional to handle mock data
                     ref: 'Product',
                 },
             },
@@ -78,6 +78,13 @@ const orderSchema = mongoose.Schema(
             enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
             default: 'pending',
         },
+        trackingUpdates: [
+            {
+                status: { type: String },
+                message: { type: String },
+                timestamp: { type: Date, default: Date.now },
+            },
+        ],
     },
     {
         timestamps: true,

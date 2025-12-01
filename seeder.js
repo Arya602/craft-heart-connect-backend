@@ -24,17 +24,21 @@ const importData = async () => {
         const createdUsers = await User.insertMany(users);
 
         const adminUser = createdUsers[0]._id;
-        const seller1 = createdUsers[2]._id; // Jane Smith (Pottery)
-        const seller2 = createdUsers[3]._id; // Ravi Kumar (Textiles)
-        const seller3 = createdUsers[4]._id; // Priya Sharma (Jewelry)
-        const seller4 = createdUsers[5]._id; // Amit Patel (Paintings)
+        const seller1 = createdUsers[2]._id; // Ravi Kumar (Textiles)
+        const seller2 = createdUsers[3]._id; // Jane Smith (Pottery)
+        const seller3 = createdUsers[4]._id; // Mohan Lal (Woodwork)
+        const seller4 = createdUsers[5]._id; // Priya Sharma (Jewelry)
+        const seller5 = createdUsers[6]._id; // Amit Patel (Paintings)
+        const seller6 = createdUsers[7]._id; // Suresh Gupta (Metalwork)
 
         const sampleProducts = products.map((product, index) => {
             let user = adminUser;
-            if (index < 4) user = seller1;       // 0-3
-            else if (index < 8) user = seller2;  // 4-7
-            else if (index < 12) user = seller3; // 8-11
-            else if (index < 16) user = seller4; // 12-15
+            if (index < 3) user = seller1;       // Textiles
+            else if (index < 6) user = seller2;  // Pottery
+            else if (index < 9) user = seller3;  // Woodwork
+            else if (index < 12) user = seller4; // Jewelry
+            else if (index < 15) user = seller5; // Paintings
+            else if (index < 18) user = seller6; // Metalwork
 
             return { ...product, user };
         });

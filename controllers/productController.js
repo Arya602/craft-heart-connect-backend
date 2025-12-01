@@ -194,6 +194,19 @@ const createProductReview = async (req, res) => {
     }
 };
 
+// @desc    Get seller's products
+// @route   GET /api/products/seller/my-products
+// @access  Private/Seller
+const getMyProducts = async (req, res) => {
+    try {
+        const products = await Product.find({ user: req.user._id }).sort({ createdAt: -1 });
+        res.json(products);
+    } catch (error) {
+        console.error('Get my products error:', error);
+        res.status(500).json({ message: 'Error fetching products', error: error.message });
+    }
+};
+
 module.exports = {
     getProducts,
     getProductById,
@@ -201,4 +214,5 @@ module.exports = {
     updateProduct,
     deleteProduct,
     createProductReview,
+    getMyProducts,
 };

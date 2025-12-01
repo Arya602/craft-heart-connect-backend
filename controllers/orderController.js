@@ -4,19 +4,21 @@ const Order = require('../models/Order');
 // @route   POST /api/orders
 // @access  Private
 const addOrderItems = async (req, res) => {
-    const {
-        orderItems,
-        shippingAddress,
-        paymentMethod,
-        itemsPrice,
-        taxPrice,
-        shippingPrice,
-        totalPrice,
-    } = req.body;
+    try {
+        const {
+            orderItems,
+            shippingAddress,
+            paymentMethod,
+            itemsPrice,
+            taxPrice,
+            shippingPrice,
+            totalPrice,
+        } = req.body;
 
-    if (orderItems && orderItems.length === 0) {
-        return res.status(400).json({ message: 'No order items' });
-    } else {
+        if (orderItems && orderItems.length === 0) {
+            return res.status(400).json({ message: 'No order items' });
+        }
+
         const order = new Order({
             orderItems,
             user: req.user._id,
@@ -26,11 +28,24 @@ const addOrderItems = async (req, res) => {
             taxPrice,
             shippingPrice,
             totalPrice,
+            trackingUpdates: [
+                {
+                    status: 'pending',
+                    message: 'Order placed successfully',
+                },
+            ],
         });
 
         const createdOrder = await order.save();
 
         res.status(201).json(createdOrder);
+    } catch (error) {
+        console.error('Order creation error:', error);
+        res.status(500).json({
+            message: 'Error creating order',
+            error: error.message,
+            details: error.errors
+        });
     }
 };
 
@@ -77,16 +92,27 @@ const updateOrderToPaid = async (req, res) => {
     }
 };
 
-// @desc    Update order to delivered
-// @route   PUT /api/orders/:id/deliver
+// @desc    Update order status (shipped/delivered)
+// @route   PUT /api/orders/:id/status
 // @access  Private/Admin/Seller
-const updateOrderToDelivered = async (req, res) => {
+const updateOrderStatus = async (req, res) => {
+    const { status } = req.body;
     const order = await Order.findById(req.params.id);
 
     if (order) {
-        order.isDelivered = true;
-        order.deliveredAt = Date.now();
-        order.status = 'delivered';
+        if (status === 'delivered') {
+            order.isDelivered = true;
+            order.deliveredAt = Date.now();
+        }
+
+        order.status = status || order.status;
+
+        // Add tracking update
+        order.trackingUpdates.push({
+            status: status,
+            message: `Order marked as ${status}`,
+            timestamp: Date.now()
+        });
 
         const updatedOrder = await order.save();
         res.json(updatedOrder);
@@ -111,11 +137,64 @@ const getOrders = async (req, res) => {
     res.json(orders);
 };
 
+// @desc    Cancel order
+// @route   PUT /api/orders/:id/cancel
+// @access  Private
+const updateOrderToCancelled = async (req, res) => {
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+        if (order.user.toString() !== req.user._id.toString() && !req.user.roles.includes('admin')) {
+            return res.status(403).json({ message: 'Not authorized to cancel this order' });
+        }
+
+        if (order.status === 'delivered' || order.status === 'shipped') {
+            return res.status(400).json({ message: 'Cannot cancel shipped or delivered order' });
+        }
+
+        order.status = 'cancelled';
+        order.trackingUpdates.push({
+            status: 'cancelled',
+            message: 'Order cancelled by user',
+        });
+
+        const updatedOrder = await order.save();
+        res.json(updatedOrder);
+    } else {
+        res.status(404).json({ message: 'Order not found' });
+    }
+};
+
+// @desc    Get seller's orders (orders containing seller's products)
+// @route   GET /api/orders/seller/my-orders
+// @access  Private/Seller
+const getSellerOrders = async (req, res) => {
+    try {
+        const Product = require('../models/Product');
+
+        // Get all products by this seller
+        const sellerProducts = await Product.find({ user: req.user._id }).select('_id');
+        const productIds = sellerProducts.map(p => p._id);
+
+        // Find orders that contain any of the seller's products
+        const orders = await Order.find({
+            'orderItems.product': { $in: productIds }
+        }).populate('user', 'username email').sort({ createdAt: -1 });
+
+        res.json(orders);
+    } catch (error) {
+        console.error('Get seller orders error:', error);
+        res.status(500).json({ message: 'Error fetching orders', error: error.message });
+    }
+};
+
 module.exports = {
     addOrderItems,
     getOrderById,
     updateOrderToPaid,
-    updateOrderToDelivered,
+    updateOrderStatus,
+    updateOrderToCancelled,
     getMyOrders,
     getOrders,
+    getSellerOrders,
 };

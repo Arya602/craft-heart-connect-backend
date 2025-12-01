@@ -60,6 +60,20 @@ const userSchema = mongoose.Schema(
                 ref: 'User',
             },
         ],
+        story: {
+            type: String,
+            default: '',
+        },
+        workshop: {
+            name: String,
+            location: String,
+            description: String,
+            image: String,
+        },
+        craft: {
+            type: String,
+            default: '',
+        },
     },
     {
         timestamps: true,

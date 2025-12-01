@@ -83,6 +83,53 @@ const markNotificationRead = async (req, res) => {
     }
 };
 
+// @desc    Update user profile (including workshop)
+// @route   PUT /api/users/profile
+// @access  Private
+const updateUserProfile = async (req, res) => {
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+        user.username = req.body.username || user.username;
+        user.email = req.body.email || user.email;
+        if (req.body.password) {
+            user.password = req.body.password;
+        }
+
+        // Update workshop details if provided
+        if (req.body.workshop) {
+            user.workshop = {
+                ...user.workshop,
+                ...req.body.workshop
+            };
+        }
+
+        // Update story if provided
+        if (req.body.story) {
+            user.story = req.body.story;
+        }
+
+        // Update craft if provided
+        if (req.body.craft) {
+            user.craft = req.body.craft;
+        }
+
+        const updatedUser = await user.save();
+
+        res.json({
+            _id: updatedUser._id,
+            username: updatedUser.username,
+            email: updatedUser.email,
+            roles: updatedUser.roles,
+            workshop: updatedUser.workshop,
+            story: updatedUser.story,
+            craft: updatedUser.craft,
+        });
+    } else {
+        res.status(404).json({ message: 'User not found' });
+    }
+};
+
 // @desc    Get all artisans (sellers)
 // @route   GET /api/users/artisans
 // @access  Public
@@ -103,4 +150,5 @@ module.exports = {
     getNotifications,
     markNotificationRead,
     getArtisans,
+    updateUserProfile,
 };

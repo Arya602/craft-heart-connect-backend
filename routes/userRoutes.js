@@ -6,9 +6,11 @@ const {
     getNotifications,
     markNotificationRead,
     getArtisans,
+    updateUserProfile,
 } = require('../controllers/userController');
 const { protect } = require('../middleware/authMiddleware');
 
+router.put('/profile', protect, updateUserProfile);
 router.get('/artisans', getArtisans);
 router.post('/follow/:id', protect, followUser);
 router.post('/unfollow/:id', protect, unfollowUser);
