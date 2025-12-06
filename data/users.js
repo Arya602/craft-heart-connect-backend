@@ -125,6 +125,24 @@ const users = [
         },
         sellerRequest: { status: 'approved', requestDate: new Date() },
     },
+    // Your Seller Account
+    {
+        username: 'Arya Verma',
+        email: 'aryavr602@gmail.com',
+        password: bcrypt.hashSync('password', 10),
+        roles: ['seller', 'buyer'],
+        bio: 'Passionate artisan creating unique handcrafted items.',
+        profileImage: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=800&auto=format&fit=crop&q=60',
+        craft: 'Mixed Crafts',
+        story: 'I love creating beautiful handcrafted items that bring joy to people. Each piece is made with care and attention to detail.',
+        workshop: {
+            name: 'Arya Crafts Studio',
+            location: 'India',
+            description: 'A creative studio where I bring my ideas to life.',
+            image: 'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=800&auto=format&fit=crop&q=60'
+        },
+        sellerRequest: { status: 'approved', requestDate: new Date() },
+    },
 ];
 
 module.exports = users;

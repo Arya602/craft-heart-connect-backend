@@ -1,5 +1,8 @@
 const User = require('../models/User');
 const Order = require('../models/Order');
+const Product = require('../models/Product');
+const AdminAction = require('../models/AdminAction');
+const asyncHandler = require('express-async-handler');
 
 // @desc    Get all users
 // @route   GET /api/admin/users
@@ -188,6 +191,223 @@ const rejectSellerRequest = async (req, res) => {
     }
 };
 
+// @desc    Issue warning to user
+// @route   POST /api/admin/users/:id/warn
+// @access  Private/Admin
+const issueWarning = asyncHandler(async (req, res) => {
+    const { reason, severity } = req.body;
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+        res.status(404);
+        throw new Error('User not found');
+    }
+
+    // Add warning to user
+    user.warnings.push({
+        issuedBy: req.user._id,
+        reason,
+        severity: severity || 'medium',
+        issuedAt: new Date(),
+    });
+
+    await user.save();
+
+    // Log admin action
+    await AdminAction.create({
+        admin: req.user._id,
+        actionType: 'warning',
+        targetType: 'User',
+        target: user._id,
+        reason,
+        details: { severity },
+    });
+
+    res.json({ message: 'Warning issued successfully', warnings: user.warnings });
+});
+
+// @desc    Suspend user account
+// @route   POST /api/admin/users/:id/suspend
+// @access  Private/Admin
+const suspendAccount = asyncHandler(async (req, res) => {
+    const { reason, duration } = req.body; // duration in days
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+        res.status(404);
+        throw new Error('User not found');
+    }
+
+    const suspendedUntil = new Date();
+    suspendedUntil.setDate(suspendedUntil.getDate() + (duration || 7));
+
+    user.accountStatus.isSuspended = true;
+    user.accountStatus.suspendedUntil = suspendedUntil;
+    user.accountStatus.suspensionReason = reason;
+    user.accountStatus.isActive = false;
+
+    await user.save();
+
+    // Log admin action
+    await AdminAction.create({
+        admin: req.user._id,
+        actionType: 'suspension',
+        targetType: 'User',
+        target: user._id,
+        reason,
+        details: { duration, suspendedUntil },
+    });
+
+    res.json({
+        message: 'Account suspended successfully',
+        suspendedUntil,
+        accountStatus: user.accountStatus
+    });
+});
+
+// @desc    Ban user permanently
+// @route   POST /api/admin/users/:id/ban
+// @access  Private/Admin
+const banUser = asyncHandler(async (req, res) => {
+    const { reason } = req.body;
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+        res.status(404);
+        throw new Error('User not found');
+    }
+
+    user.accountStatus.isBanned = true;
+    user.accountStatus.banReason = reason;
+    user.accountStatus.isActive = false;
+    user.accountStatus.isSuspended = false;
+
+    await user.save();
+
+    // Log admin action
+    await AdminAction.create({
+        admin: req.user._id,
+        actionType: 'ban',
+        targetType: 'User',
+        target: user._id,
+        reason,
+    });
+
+    res.json({ message: 'User banned permanently', accountStatus: user.accountStatus });
+});
+
+// @desc    Unban user
+// @route   POST /api/admin/users/:id/unban
+// @access  Private/Admin
+const unbanUser = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+        res.status(404);
+        throw new Error('User not found');
+    }
+
+    user.accountStatus.isBanned = false;
+    user.accountStatus.banReason = '';
+    user.accountStatus.isActive = true;
+    user.accountStatus.isSuspended = false;
+    user.accountStatus.suspendedUntil = null;
+
+    await user.save();
+
+    // Log admin action
+    await AdminAction.create({
+        admin: req.user._id,
+        actionType: 'unban',
+        targetType: 'User',
+        target: user._id,
+        reason: 'Account unbanned by admin',
+    });
+
+    res.json({ message: 'User unbanned successfully', accountStatus: user.accountStatus });
+});
+
+// @desc    Ban product
+// @route   POST /api/admin/products/:id/ban
+// @access  Private/Admin
+const banProduct = asyncHandler(async (req, res) => {
+    const { reason } = req.body;
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+        res.status(404);
+        throw new Error('Product not found');
+    }
+
+    product.isBanned = true;
+    product.banReason = reason;
+    product.bannedAt = new Date();
+    product.bannedBy = req.user._id;
+
+    await product.save();
+
+    // Log admin action
+    await AdminAction.create({
+        admin: req.user._id,
+        actionType: 'product_ban',
+        targetType: 'Product',
+        target: product._id,
+        reason,
+    });
+
+    res.json({ message: 'Product banned successfully', product });
+});
+
+// @desc    Unban product
+// @route   POST /api/admin/products/:id/unban
+// @access  Private/Admin
+const unbanProduct = asyncHandler(async (req, res) => {
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+        res.status(404);
+        throw new Error('Product not found');
+    }
+
+    product.isBanned = false;
+    product.banReason = '';
+    product.bannedAt = null;
+    product.bannedBy = null;
+
+    await product.save();
+
+    // Log admin action
+    await AdminAction.create({
+        admin: req.user._id,
+        actionType: 'product_unban',
+        targetType: 'Product',
+        target: product._id,
+        reason: 'Product unbanned by admin',
+    });
+
+    res.json({ message: 'Product unbanned successfully', product });
+});
+
+// @desc    Get admin actions (audit log)
+// @route   GET /api/admin/actions
+// @access  Private/Admin
+const getAdminActions = asyncHandler(async (req, res) => {
+    const { limit = 50, actionType, targetType } = req.query;
+
+    let query = {};
+    if (actionType) query.actionType = actionType;
+    if (targetType) query.targetType = targetType;
+
+    const actions = await AdminAction.find(query)
+        .populate('admin', 'username email')
+        .populate('target')
+        .populate('relatedReport')
+        .sort({ createdAt: -1 })
+        .limit(parseInt(limit));
+
+    res.json(actions);
+});
+
 module.exports = {
     getUsers,
     updateUser,
@@ -197,4 +417,11 @@ module.exports = {
     getSellerRequests,
     approveSellerRequest,
     rejectSellerRequest,
+    issueWarning,
+    suspendAccount,
+    banUser,
+    unbanUser,
+    banProduct,
+    unbanProduct,
+    getAdminActions,
 };

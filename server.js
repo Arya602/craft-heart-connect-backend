@@ -45,6 +45,9 @@ app.use('/api/wishlist', require('./routes/wishlistRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/seller', require('./routes/sellerRoutes'));
 app.use('/api/analytics', require('./routes/analyticsRoutes'));
+app.use('/api/reports', require('./routes/reportRoutes'));
+app.use('/api/artisans', require('./routes/artisanRoutes'));
+app.use('/api/workshops', require('./routes/workshopRoutes'));
 
 app.get('/', (req, res) => {
     res.send('API is running...');

@@ -21,10 +21,35 @@ const reportSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        details: {
+            type: String,
+            required: false,
+        },
+        image: {
+            type: String,
+            required: false,
+        },
         status: {
             type: String,
-            enum: ['pending', 'resolved', 'dismissed'],
+            enum: ['pending', 'verified', 'action_taken', 'dismissed'],
             default: 'pending',
+        },
+        actionTaken: {
+            type: String,
+            default: '',
+        },
+        actionTakenBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            default: null,
+        },
+        actionTakenAt: {
+            type: Date,
+            default: null,
+        },
+        adminNotes: {
+            type: String,
+            default: '',
         },
     },
     {

@@ -74,6 +74,53 @@ const userSchema = mongoose.Schema(
             type: String,
             default: '',
         },
+        accountStatus: {
+            isActive: {
+                type: Boolean,
+                default: true,
+            },
+            isSuspended: {
+                type: Boolean,
+                default: false,
+            },
+            isBanned: {
+                type: Boolean,
+                default: false,
+            },
+            suspendedUntil: {
+                type: Date,
+                default: null,
+            },
+            banReason: {
+                type: String,
+                default: '',
+            },
+            suspensionReason: {
+                type: String,
+                default: '',
+            },
+        },
+        warnings: [
+            {
+                issuedBy: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'User',
+                },
+                reason: {
+                    type: String,
+                    required: true,
+                },
+                severity: {
+                    type: String,
+                    enum: ['low', 'medium', 'high'],
+                    default: 'medium',
+                },
+                issuedAt: {
+                    type: Date,
+                    default: Date.now,
+                },
+            },
+        ],
     },
     {
         timestamps: true,
